@@ -28,7 +28,7 @@ from client import Track
 MAX_TRACKS_PER_IMPORT = 100
 SUBMISSION_INTERVAL_SECONDS = 120
 
-logger = logging.getLogger("listenbrainz")
+logger = logging.getLogger("listenbrainz-fork")
 
 
 class ListenBrainzQueue:

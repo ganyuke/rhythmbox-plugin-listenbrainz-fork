@@ -37,11 +37,11 @@ RE_MBID = re.compile(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}")
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-logger = logging.getLogger("listenbrainz")
+logger = logging.getLogger("listenbrainz-fork")
 
 
 class ListenBrainzPlugin(GObject.Object, Peas.Activatable):
-    __gtype_name = 'ListenBrainzPlugin'
+    __gtype_name = 'ListenBrainzForkPlugin'
     object = GObject.property(type=GObject.GObject)
 
     def __init__(self):
@@ -60,6 +60,9 @@ class ListenBrainzPlugin(GObject.Object, Peas.Activatable):
         self.settings.connect("changed::user-token",
                               self.on_user_token_changed)
         self.on_user_token_changed(self.settings)
+        self.settings.connect("changed::server-url",
+                              self.on_server_url_changed)
+        self.on_server_url_changed(self.settings)
         self.__current_entry = None
         self.__current_start_time = 0
         self.__current_elapsed = 0
@@ -81,6 +84,7 @@ class ListenBrainzPlugin(GObject.Object, Peas.Activatable):
         shell_player.disconnect_by_func(self.on_playing_song_changed)
         shell_player.disconnect_by_func(self.on_elapsed_changed)
         self.settings.disconnect_by_func(self.on_user_token_changed)
+        self.settings.disconnect_by_func(self.on_server_url_changed)
         self.__queue.deactivate()
         with self.__lock:
             self.__queue.submit_batch()
@@ -112,6 +116,9 @@ class ListenBrainzPlugin(GObject.Object, Peas.Activatable):
 
     def on_user_token_changed(self, settings, key="user-token"):
         self.__client.user_token = settings.get_string("user-token")
+
+    def on_server_url_changed(self, settings, key="server-url"):
+        self.__client.server_url = settings.get_string("server-url")
 
     def _submit_current_entry(self):
         if self.__current_entry is not None:

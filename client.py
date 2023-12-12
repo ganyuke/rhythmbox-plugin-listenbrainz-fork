@@ -26,7 +26,7 @@ import time
 from http.client import HTTPSConnection
 
 HOST_NAME = "api.listenbrainz.org"
-PATH_SUBMIT = "/1/submit-listens"
+PATH_SUBMIT = "1/submit-listens"
 SSL_CONTEXT = ssl.create_default_context()
 
 
@@ -83,6 +83,7 @@ class ListenBrainzClient:
         self.user_token = None
         self.logger = logger
         self._timeout = timeout
+        self.server_url = HOST_NAME
 
     def listen(self, listened_at, track):
         """
@@ -121,9 +122,9 @@ class ListenBrainzClient:
             "Content-Type": "application/json"
         }
         body = json.dumps(data)
-        conn = HTTPSConnection(HOST_NAME, context=SSL_CONTEXT, timeout=self._timeout)
+        conn = HTTPSConnection(self.server_url.split("/")[0], context=SSL_CONTEXT, timeout=self._timeout)
         try:
-            conn.request("POST", PATH_SUBMIT, body, headers)
+            conn.request("POST", "/" + self.server_url.split("/", 1)[1] + PATH_SUBMIT, body, headers)
             response = conn.getresponse()
             response_text = response.read()
         finally:

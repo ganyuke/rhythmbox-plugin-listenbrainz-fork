@@ -27,14 +27,15 @@ from gi.repository import PeasGtk
 
 
 def load_settings():
-    return Gio.Settings.new("org.gnome.rhythmbox.plugins.listenbrainz")
+    return Gio.Settings.new("com.github.ganyuke.rhythmbox-plugin-listenbrainz-fork")
 
 
 class ListenBrainzSettings(GObject.Object, PeasGtk.Configurable):
-    __gtype_name__ = 'ListenBrainzSettings'
+    __gtype_name__ = 'ListenBrainzForkSettings'
     object = GObject.property(type=GObject.Object)
 
     user_token_entry = GObject.Property(type=Gtk.Entry, default=None)
+    server_url_entry = GObject.Property(type=Gtk.Entry, default=None)
 
     def do_create_configure_widget(self):
         self.settings = load_settings()
@@ -43,9 +44,12 @@ class ListenBrainzSettings(GObject.Object, PeasGtk.Configurable):
         self.builder = Gtk.Builder()
         self.builder.add_from_file(ui_file)
 
-        content = self.builder.get_object("listenbrainz-settings")
+        content = self.builder.get_object("listenbrainz-fork-settings")
 
         self.user_token_entry = self.builder.get_object("user-token")
         self.settings.bind("user-token", self.user_token_entry, "text", 0)
+
+        self.server_url_entry = self.builder.get_object("server-url")
+        self.settings.bind("server-url", self.server_url_entry, "text", 0)
 
         return content

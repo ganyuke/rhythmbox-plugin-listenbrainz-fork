@@ -1,0 +1,14 @@
+<schemalist>
+  <schema id="com.github.ganyuke.rhythmbox-plugin-listenbrainz-fork" path="/com/github/ganyuke/rhythmbox-plugin-listenbrainz-fork/">
+      <key type="s" name="user-token">
+          <default>""</default>
+          <summary>ListenBrainz user token</summary>
+          <description></description>
+      </key>
+    <key type="s" name="server-url">
+          <default>""</default>
+          <summary>ListenBrainz server URL</summary>
+          <description></description>
+      </key>
+  </schema>
+</schemalist>
